@@ -1,27 +1,10 @@
-import { useEffect, useState } from "react"
-import type { Options } from "./create-video-thumbnail"
+import { useContext } from "react"
+import { ConfigContext } from "./configContext"
 
-export function useConfig() {
-  // Default configuration for video thumbnail generation
-  const [config, setConfig] = useState<Options>({
-    maxWidth: 900,
-    maxHeight: 507,
-    quality: 0.85,
-    captureTime: 0.1,
-    format: "image/jpeg",
-  })
-
-  useEffect(() => {
-    const storedConfig = localStorage.getItem("videoThumbnailConfig")
-    if (storedConfig) {
-      // XXX make safer
-      setConfig(JSON.parse(storedConfig))
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem("videoThumbnailConfig", JSON.stringify(config))
-  }, [config])
-
-  return [config, setConfig] as const
+export const useConfig = () => {
+  const context = useContext(ConfigContext)
+  if (!context) {
+    throw new Error("useConfig must be used within a ConfigProvider")
+  }
+  return context
 }

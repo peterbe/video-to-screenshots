@@ -1,21 +1,11 @@
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { type ReactNode, createContext, useEffect, useState } from "react"
 import type { Options } from "./create-video-thumbnail"
 
-// Define the config type
-
-// Define the context value type
 interface ConfigContextValue {
   config: Options
   setConfig: (newConfig: Partial<Options>) => void
 }
 
-// Default config
 const defaultConfig: Options = {
   maxWidth: 900,
   maxHeight: 507,
@@ -24,27 +14,19 @@ const defaultConfig: Options = {
   format: "image/jpeg",
 }
 
-// Create the context
 export const ConfigContext = createContext<ConfigContextValue | undefined>(
   undefined,
 )
 
-// Props type for the provider
-interface ConfigProviderProps {
+type ConfigProviderProps = {
   children: ReactNode
   initialConfig?: Options
 }
 
-// Context provider component
 export const ConfigProvider: React.FC<ConfigProviderProps> = ({
   children,
   initialConfig = defaultConfig,
 }) => {
-  // const [config, setConfigState] = useState<Options>(initialConfig)
-
-  // const setConfig = (newConfig: Partial<Options>): void => {
-  //   setConfigState((prev) => ({ ...prev, ...newConfig }))
-  // }
   const [config, setConfig] = useState<Options>(initialConfig)
 
   useEffect(() => {
@@ -64,12 +46,4 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
       {children}
     </ConfigContext.Provider>
   )
-}
-
-export const useConfig = () => {
-  const context = useContext(ConfigContext)
-  if (!context) {
-    throw new Error("useConfig must be used within a ConfigProvider")
-  }
-  return context
 }

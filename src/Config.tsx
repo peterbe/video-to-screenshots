@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { useConfig } from "./configContext"
-// import { useConfig } from "./useConfig"
+import { useConfig } from "./useConfig"
 
 export function Config() {
   const { config, setConfig } = useConfig()

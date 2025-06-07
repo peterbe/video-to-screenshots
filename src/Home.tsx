@@ -4,7 +4,7 @@ import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
 import { createVideoThumbnail } from "./create-video-thumbnail"
 import type { Thumbnail } from "./types"
-import { useConfig } from "./configContext"
+import { useConfig } from "./useConfig"
 
 export function Home() {
   const { config } = useConfig()
