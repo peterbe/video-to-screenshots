@@ -1,17 +1,23 @@
-import { type ReactNode, createContext, useEffect, useState } from "react"
+import {
+  type ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import type { Options } from "./create-video-thumbnail"
 
-interface ConfigContextValue {
-  config: Options
-  setConfig: (newConfig: Partial<Options>) => void
-}
-
-const defaultConfig: Options = {
+export const defaultConfig: Options = {
   maxWidth: 900,
   maxHeight: 507,
   quality: 0.85,
   captureTime: 0.1,
   format: "image/jpeg",
+}
+
+interface ConfigContextValue {
+  config: Options
+  setConfig: (newConfig: Partial<Options>) => void
 }
 
 export const ConfigContext = createContext<ConfigContextValue | undefined>(
@@ -27,8 +33,13 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
   children,
   initialConfig = defaultConfig,
 }) => {
-  const [config, setConfig] = useState<Options>(initialConfig)
+  const [config, setConfigState] = useState<Options>(initialConfig)
 
+  const setConfig = (newConfig: Partial<Options>): void => {
+    setConfigState((prev) => ({ ...prev, ...newConfig }))
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: XXX
   useEffect(() => {
     const storedConfig = localStorage.getItem("videoThumbnailConfig")
     if (storedConfig) {
@@ -46,4 +57,12 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
       {children}
     </ConfigContext.Provider>
   )
+}
+
+export const useConfig = () => {
+  const context = useContext(ConfigContext)
+  if (!context) {
+    throw new Error("useConfig must be used within a ConfigProvider")
+  }
+  return context
 }

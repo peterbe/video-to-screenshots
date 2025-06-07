@@ -2,9 +2,10 @@ import { useEffect, useState } from "react"
 import { Config } from "./Config"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
+import { useConfig } from "./configContext"
 import { createVideoThumbnail } from "./create-video-thumbnail"
 import type { Thumbnail } from "./types"
-import { useConfig } from "./useConfig"
+// import { useConfig } from "./useConfig"
 
 export function Home() {
   const { config } = useConfig()
@@ -16,8 +17,6 @@ export function Home() {
   }
 
   useEffect(() => {
-    console.log({ USE_EFFECT_CONFIG: config })
-
     if (videoFile) {
       createVideoThumbnail(videoFile, config)
         .then((dataURI) => {
