@@ -3,32 +3,30 @@ import { Config } from "./Config"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
 import { createVideoThumbnail } from "./create-video-thumbnail"
-import type { Thumbnail } from "./types"
+import type { FileUpload, Thumbnail } from "./types"
 import { useConfig } from "./useConfig"
 
 export function Home() {
   const { config } = useConfig()
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
-  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [fileUpload, setFileUpload] = useState<FileUpload | null>(null)
 
-  function uploadHandler(file: File) {
-    setVideoFile(file)
+  function uploadHandler(fileUpload: FileUpload) {
+    setFileUpload(fileUpload)
   }
 
   useEffect(() => {
-    console.log({ USE_EFFECT_CONFIG: config })
-
-    if (videoFile) {
-      createVideoThumbnail(videoFile, config)
+    if (fileUpload) {
+      createVideoThumbnail(fileUpload, config)
         .then((dataURI) => {
-          setThumbnails((prev) => [...prev, { dataURI, config }])
+          setThumbnails((prev) => [...prev, { dataURI, filename, config }])
           console.log("Thumbnail created:", dataURI)
         })
         .catch((error) => {
           console.error("Error creating thumbnail:", error)
         })
     }
-  }, [videoFile, config])
+  }, [fileUpload, config])
 
   return (
     <div>
