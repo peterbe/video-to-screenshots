@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { Config } from "./Config"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
+import { useConfig } from "./configContext"
 import { createVideoThumbnail } from "./create-video-thumbnail"
 import type { FileUpload, Thumbnail } from "./types"
-import { useConfig } from "./useConfig"
 
 export function Home() {
   const { config } = useConfig()
@@ -17,9 +17,12 @@ export function Home() {
 
   useEffect(() => {
     if (fileUpload) {
-      createVideoThumbnail(fileUpload, config)
+      createVideoThumbnail(fileUpload.file, config)
         .then((dataURI) => {
-          setThumbnails((prev) => [...prev, { dataURI, filename, config }])
+          setThumbnails((prev) => [
+            ...prev,
+            { dataURI, name: fileUpload.name, config },
+          ])
           console.log("Thumbnail created:", dataURI)
         })
         .catch((error) => {

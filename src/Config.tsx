@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useConfig } from "./useConfig"
+import { useConfig } from "./configContext"
 
 export function Config() {
   const { config, setConfig } = useConfig()
@@ -46,14 +46,6 @@ export function Config() {
       //   console.log(newConfig)
 
       setConfig(newConfig)
-      //   setConfig(() => ({
-      //     // ...prev,
-      //     maxWidth: Number.parseInt(maxWidth as string, 10),
-      //     maxHeight: Number.parseInt(maxHeight as string, 10),
-      //     quality: Number.parseFloat(quality as string),
-      //     captureTime: Number.parseFloat(captureTime as string),
-      //     format: format as "image/jpeg" | "image/png" | "image/webp",
-      //   }))
     }
   }
 

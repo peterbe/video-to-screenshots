@@ -7,6 +7,6 @@ export type Thumbnail = {
 }
 
 export type FileUpload = {
-  file: File,
+  file: File
   name: string
 }
