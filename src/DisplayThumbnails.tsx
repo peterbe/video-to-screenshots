@@ -3,12 +3,14 @@ import type { Thumbnail } from "./types"
 export function DisplayThumbnails({ thumbnails }: { thumbnails: Thumbnail[] }) {
   return (
     <div className="grid">
-      {thumbnails.map(({ dataURI, config }, index) => (
+      {thumbnails.map(({ dataURI, name, config }, index) => (
         <article key={index}>
           <img src={dataURI} alt={`Thumbnail ${index + 1}`} />
           <footer>
             <p>
               {config.maxWidth}x{config.maxHeight}
+              &nbsp;
+              <small>{name}</small>
             </p>
             <p>Config:</p>
             <ul>

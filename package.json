@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "biome check --write src && prettier --write src package.json public/manifest.webmanifest",
     "lint:check": "biome check src && prettier --check src package.json public/manifest.webmanifest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@picocss/pico": "^2.1.1",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "prettier": "^3.5.3",
     "sass-embedded": "^1.89.1",
     "typescript": "~5.8.3",
