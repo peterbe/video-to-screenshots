@@ -8,9 +8,9 @@ import {
 import type { Options } from "./create-video-thumbnail"
 
 export const defaultConfig: Options = {
-  maxWidth: 900,
-  maxHeight: 507,
-  quality: 0.85,
+  maxWidth: 1000,
+  maxHeight: 1000,
+  quality: 1.0,
   captureTime: 0.1,
   format: "image/jpeg",
 }
@@ -41,7 +41,7 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: XXX
   useEffect(() => {
-    const storedConfig = localStorage.getItem("videoThumbnailConfig")
+    const storedConfig = sessionStorage.getItem("videoThumbnailConfig")
     if (storedConfig) {
       // XXX make safer
       setConfig(JSON.parse(storedConfig))
@@ -49,7 +49,7 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
   }, [])
 
   useEffect(() => {
-    localStorage.setItem("videoThumbnailConfig", JSON.stringify(config))
+    sessionStorage.setItem("videoThumbnailConfig", JSON.stringify(config))
   }, [config])
 
   return (

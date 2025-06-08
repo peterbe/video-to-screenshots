@@ -10,8 +10,6 @@ export function UploadForm({ onUpload }: { onUpload: (file: File) => void }) {
   }
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
-    console.log({ file })
-
     if (file) {
       onUpload(file)
     }
@@ -27,7 +25,8 @@ export function UploadForm({ onUpload }: { onUpload: (file: File) => void }) {
         />
         {/* <button type="submit">Upload locally</button> */}
       </form>
-      <p>Supported formats: MP4, AVI, MKV, MOV</p>
+      {/* <p>Supported formats: MP4, AVI, MKV, MOV</p> */}
+      <p>Select a movie file from your computer</p>
     </div>
   )
 }

@@ -43,7 +43,6 @@ export function Config() {
         captureTime: Number.parseFloat(captureTime as string),
         format: format as "image/jpeg" | "image/png" | "image/webp",
       }
-      //   console.log(newConfig)
 
       setConfig(newConfig)
     }
