@@ -8,6 +8,7 @@ import {
   createVideoThumbnail,
   getVideoMetadata,
 } from "./create-video-thumbnail"
+import { formatBytes } from "./formatBytes"
 import { formatDuration } from "./formatDuration"
 import type { Thumbnail, VideoMetadata } from "./types"
 
@@ -36,7 +37,7 @@ export function Home() {
 
   useEffect(() => {
     if (file && videoMetadata) {
-      const captureTimes = [0.0, 5.0, 10]
+      const captureTimes = [0.0, 5.0, 10] // XXX THIS NEEDS TO BE CONFIGURABLE AND DEPEND ON THE DURATION
 
       const captureCallback = (captureTime: number) => {
         const captureConfig = { ...config, captureTime }
@@ -84,7 +85,10 @@ export function Home() {
       <UploadForm onUpload={uploadHandler} />
       {error && <VideoError error={error} />}
       {videoMetadata !== null && (
-        <p>Video duration {formatDuration(videoMetadata.duration)}.</p>
+        <p>
+          Video duration {formatDuration(videoMetadata.duration)}.{" "}
+          {file && <span>File size {formatBytes(file.size)}</span>}
+        </p>
       )}
       <DisplayThumbnails thumbnails={thumbnails} />
       <Config />

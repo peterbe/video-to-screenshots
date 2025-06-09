@@ -23,7 +23,6 @@ export function UploadForm({ onUpload }: { onUpload: (file: File) => void }) {
           accept="video/*"
           onChange={handleFileChange}
         />
-        {/* <button type="submit">Upload locally</button> */}
       </form>
       {/* <p>Supported formats: MP4, AVI, MKV, MOV</p> */}
       <p>Select a movie file from your computer</p>
