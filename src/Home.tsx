@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Config } from "./Config"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
@@ -37,7 +36,7 @@ export function Home() {
 
   useEffect(() => {
     if (file && videoMetadata) {
-      const captureTimes = [0.0, 5.0, 10] // XXX THIS NEEDS TO BE CONFIGURABLE AND DEPEND ON THE DURATION
+      const captureTimes = getCaptureTimes(videoMetadata.duration)
 
       const captureCallback = (captureTime: number) => {
         const captureConfig = { ...config, captureTime }
@@ -63,7 +62,10 @@ export function Home() {
             setError(null)
             const nextCaptureTime = captureTimes.shift()
             if (nextCaptureTime !== undefined) {
-              captureCallback(nextCaptureTime)
+              // Fake delay
+              sleep(100).then(() => {
+                captureCallback(nextCaptureTime)
+              })
             }
           })
           .catch((error) => {
@@ -81,7 +83,6 @@ export function Home() {
 
   return (
     <div>
-      Upload a video
       <UploadForm onUpload={uploadHandler} />
       {error && <VideoError error={error} />}
       {videoMetadata !== null && (
@@ -91,7 +92,28 @@ export function Home() {
         </p>
       )}
       <DisplayThumbnails thumbnails={thumbnails} />
-      <Config />
+      {/* <Config /> */}
     </div>
   )
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function getCaptureTimes(duration: number): number[] {
+  const captureTimes: number[] = [] // first frame
+  let framesCount = 9 // 3 rows of 3 thumbnails
+  if (duration > 60) {
+    framesCount = 21 // 7 rows of 3 thumbnails
+  } else if (duration > 10) {
+    framesCount = 15 // 5 rows of 3 thumbnails
+  }
+  const step = duration / framesCount
+
+  for (let time = 0.1; time < duration; time += step) {
+    captureTimes.push(time)
+  }
+
+  return captureTimes
 }

@@ -25,7 +25,13 @@ export function UploadForm({ onUpload }: { onUpload: (file: File) => void }) {
         />
       </form>
       {/* <p>Supported formats: MP4, AVI, MKV, MOV</p> */}
-      <p>Select a movie file from your computer</p>
+      <p>
+        Select a video file from your computer.
+        <br />
+        It won't be uploaded to any server.
+        <br />
+        Stays in your browser.
+      </p>
     </div>
   )
 }
