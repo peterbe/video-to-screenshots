@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && bun run ssg",
     "lint": "biome check --write src && prettier --write src package.json public/manifest.webmanifest",
     "lint:check": "biome check src && prettier --check src package.json public/manifest.webmanifest",
     "preview": "vite preview",

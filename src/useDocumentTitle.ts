@@ -1,3 +1,7 @@
+import { useEffect } from "react"
+
 export function useDocumentTitle(title: string): void {
-  document.title = title
+  useEffect(() => {
+    window.document.title = title
+  }, [title])
 }
