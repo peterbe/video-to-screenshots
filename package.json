@@ -5,14 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && bun run ssg",
     "lint": "biome check --write src && prettier --write src package.json public/manifest.webmanifest",
     "lint:check": "biome check src && prettier --check src package.json public/manifest.webmanifest",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "ssg": "bun run src/scripts/generate-static-pages.ts",
+    "#test": "bun run test:ssg && bun run test:playwright",
+    "test": "bun run test:ssg",
+    "test:ssg": "bun test ./src/tests/ssg.test.ts",
+    "test:playwright": "playwright test",
+    "playwright:codegen": "playwright codegen"
   },
   "dependencies": {
     "@picocss/pico": "^2.1.1",
+    "cheerio": "^1.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.2"
@@ -20,6 +27,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@eslint/js": "^9.25.0",
+    "@types/bun": "^1.2.16",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react-swc": "^3.9.0",
