@@ -34,7 +34,7 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
-    "sass-embedded": "^1.89.1",
+    "sass-embedded": "^1.89.2",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   }
