@@ -9,9 +9,12 @@ import {
 } from "./create-video-thumbnail"
 import { formatBytes } from "./formatBytes"
 import { formatDuration } from "./formatDuration"
+import { ROOT } from "./titles"
 import type { Thumbnail, VideoMetadata } from "./types"
+import { useDocumentTitle } from "./useDocumentTitle"
 
 export function Home() {
+  useDocumentTitle(ROOT)
   const { config } = useConfig()
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
   const [file, setFile] = useState<File | null>(null)
