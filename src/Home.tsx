@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
@@ -22,71 +22,77 @@ export function Home() {
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(null)
 
   function uploadHandler(file: File) {
+    setThumbnails([])
     setFile(file)
-  }
 
-  useEffect(() => {
-    if (file) {
-      getVideoMetadata(file)
-        .then((metadata) => {
-          setVideoMetadata(metadata)
+    // TODO THIS IS TOO LARGE. PLEASE REFACTOR
+
+    getVideoMetadata(file)
+      .then((metadata) => {
+        setVideoMetadata(metadata)
+
+        const captureTimes = getCaptureTimes(metadata.duration)
+        const queue = captureTimes.map((captureTime, index) => {
+          return { captureTime, index }
         })
-        .catch((error) => {
-          setError(error)
-        })
-    }
-  }, [file])
-
-  useEffect(() => {
-    if (file && videoMetadata) {
-      const captureTimes = getCaptureTimes(videoMetadata.duration)
-
-      const captureCallback = (captureTime: number) => {
-        const captureConfig = { ...config, captureTime }
-        createVideoThumbnail(file, captureConfig)
-          .then((dataURI) => {
-            setThumbnails((prev) => {
-              return [
-                ...prev.filter(
-                  (t) =>
-                    !(
-                      t.name === file.name &&
-                      t.config.captureTime === captureTime
-                    ),
-                ),
-                {
-                  dataURI,
-                  name: file.name,
-                  videoMetadata,
-                  config: captureConfig,
-                },
-              ]
-            })
-            setError(null)
-            const nextCaptureTime = captureTimes.shift()
-            if (nextCaptureTime !== undefined) {
-              // Fake delay
-              sleep(100).then(() => {
-                captureCallback(nextCaptureTime)
+        const captureCallback = ({
+          captureTime,
+          index,
+        }: { captureTime: number; index: number }) => {
+          const captureConfig = { ...config, captureTime }
+          createVideoThumbnail(file, captureConfig)
+            .then((dataURI) => {
+              setThumbnails((prev) => {
+                return [
+                  ...prev.filter(
+                    (t) =>
+                      !(
+                        t.name === file.name &&
+                        t.config.captureTime === captureTime
+                      ),
+                  ),
+                  {
+                    dataURI,
+                    name: file.name,
+                    videoMetadata: metadata,
+                    config: captureConfig,
+                    index,
+                  },
+                ]
               })
-            }
-          })
-          .catch((error) => {
-            setError(error)
-          })
-      }
+              setError(null)
+              const next = queue.shift()
+              if (next !== undefined) {
+                // Fake delay
+                sleep(100).then(() => {
+                  captureCallback(next)
+                })
+              }
+            })
+            .catch((error) => {
+              setError(error)
+            })
+        }
 
-      const captureTime = captureTimes.shift()
-      if (captureTime !== undefined) {
-        // Start the recursive capture process!
-        captureCallback(captureTime)
-      }
-    }
-  }, [file, config, videoMetadata])
+        const next = queue.shift()
+        if (next !== undefined) {
+          // Start the recursive capture process!
+          captureCallback(next)
+        }
+      })
+      .catch((error) => {
+        setError(error)
+      })
+  }
+  function uploadResetHandler() {
+    setFile(null)
+    setVideoMetadata(null)
+    setThumbnails([])
+  }
 
   return (
     <div>
-      <UploadForm onUpload={uploadHandler} />
+      <UploadForm onUpload={uploadHandler} onReset={uploadResetHandler} />
       {error && <VideoError error={error} />}
       {videoMetadata !== null && (
         <p>
@@ -95,7 +101,6 @@ export function Home() {
         </p>
       )}
       <DisplayThumbnails thumbnails={thumbnails} />
-      {/* <Config /> */}
     </div>
   )
 }
@@ -104,17 +109,17 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-function getCaptureTimes(duration: number): number[] {
+function getCaptureTimes(durationSeconds: number): number[] {
   const captureTimes: number[] = [] // first frame
   let framesCount = 9 // 3 rows of 3 thumbnails
-  if (duration > 60) {
-    framesCount = 21 // 7 rows of 3 thumbnails
-  } else if (duration > 10) {
-    framesCount = 15 // 5 rows of 3 thumbnails
+  if (durationSeconds > 60) {
+    framesCount = 15 // 7 rows of 3 thumbnails
+  } else if (durationSeconds > 10) {
+    framesCount = 12 // 5 rows of 3 thumbnails
   }
-  const step = duration / framesCount
+  const step = durationSeconds / framesCount
 
-  for (let time = 0.1; time < duration; time += step) {
+  for (let time = 0.1; time + step < durationSeconds; time += step) {
     captureTimes.push(time)
   }
 

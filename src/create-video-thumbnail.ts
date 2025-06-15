@@ -54,8 +54,6 @@ export function createVideoThumbnail(
       canvas.width = width
       canvas.height = height
 
-      console.log({ captureTime })
-
       video.currentTime = captureTime
     }
 

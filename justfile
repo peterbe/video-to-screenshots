@@ -10,6 +10,9 @@ build:
 build-for-test:
     VITE_TEST=1 bun run build
 
+start: build
+    bun run preview
+
 lint:
     bun run lint:check
 

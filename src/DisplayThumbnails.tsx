@@ -4,29 +4,27 @@ import type { Thumbnail } from "./types"
 import { useOnEscape } from "./useOnEscape"
 
 export function DisplayThumbnails({ thumbnails }: { thumbnails: Thumbnail[] }) {
-  const [focusThumbnail, setFocusThumbnail] = useState<Thumbnail | null>(null)
-  const groups = chunkArray<Thumbnail>(thumbnails, 3)
+  const [focusThumbnailIndex, setFocusThumbnailIndex] = useState<number | null>(
+    null,
+  )
+  const PER_ROW = 3
+  const groups = chunkArray<Thumbnail>(thumbnails, PER_ROW)
 
   useOnEscape(() => {
-    setFocusThumbnail(null)
+    setFocusThumbnailIndex(null)
   })
 
-  if (focusThumbnail) {
+  if (focusThumbnailIndex !== null) {
     return (
       <div>
-        <button type="button" onClick={() => setFocusThumbnail(null)}>
+        <button type="button" onClick={() => setFocusThumbnailIndex(null)}>
           Close
         </button>
         <ShowThumbnail
-          thumbnail={focusThumbnail}
+          index={focusThumbnailIndex}
+          thumbnail={thumbnails[focusThumbnailIndex]}
           isFocused={true}
-          focusThumbnail={(thumbnail) =>
-            setFocusThumbnail((p) =>
-              p?.config.captureTime === thumbnail.config.captureTime
-                ? null
-                : thumbnail,
-            )
-          }
+          focusThumbnail={() => setFocusThumbnailIndex(null)}
         />
       </div>
     )
@@ -36,26 +34,37 @@ export function DisplayThumbnails({ thumbnails }: { thumbnails: Thumbnail[] }) {
     <div>
       {groups.map((thumbnails, index) => {
         const spacer =
-          thumbnails.length < 3
-            ? new Array(3 - thumbnails.length).fill(null)
+          thumbnails.length < PER_ROW
+            ? new Array(PER_ROW - thumbnails.length).fill(null)
             : []
 
         return (
           <div className="grid" key={index}>
-            {thumbnails.map((thumbnail, index) => (
-              <ShowThumbnail
-                key={`${thumbnail.config.captureTime}${index}`}
-                isFocused={false}
-                thumbnail={thumbnail}
-                focusThumbnail={(thumbnail) =>
-                  setFocusThumbnail((p) =>
-                    p?.config.captureTime === thumbnail.config.captureTime
-                      ? null
-                      : thumbnail,
-                  )
-                }
-              />
-            ))}
+            {thumbnails.map((thumbnail) => {
+              const key = [
+                thumbnail.name,
+                thumbnail.index,
+                thumbnail.config.captureTime,
+                thumbnail.config.quality,
+                thumbnail.config.format,
+              ]
+                .map((x) => `${x}`)
+                .join("")
+
+              return (
+                <ShowThumbnail
+                  key={key}
+                  index={thumbnail.index}
+                  isFocused={false}
+                  thumbnail={thumbnail}
+                  focusThumbnail={(number) => {
+                    console.log({ CLICKED_ON: number })
+
+                    setFocusThumbnailIndex(number)
+                  }}
+                />
+              )
+            })}
             {spacer.map((_, index) => (
               <div key={index} className="spacer" />
             ))}
