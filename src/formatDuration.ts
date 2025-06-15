@@ -1,6 +1,6 @@
 export function formatDuration(seconds: number): string {
   if (seconds < 60) {
-    return `${seconds.toFixed(seconds < 1 ? 1 : 0)}s`
+    return `${seconds.toFixed(seconds < 10 ? 1 : 0)}s`
   }
   const minutes = Math.floor(seconds / 60)
   const secs = Math.floor(seconds % 60)

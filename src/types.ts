@@ -5,6 +5,7 @@ export type Thumbnail = {
   name: string
   config: Options
   videoMetadata: VideoMetadata
+  index: number
 }
 
 export type FileUpload = {

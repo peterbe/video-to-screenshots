@@ -83,6 +83,7 @@ export const ShowThumbnail = memo(_ShowThumbnail, (prevProps, nextProps) => {
   // Only re-render if the thumbnail or focus state changes
   return (
     prevProps.thumbnail === nextProps.thumbnail &&
+    prevProps.index === nextProps.index &&
     prevProps.isFocused === nextProps.isFocused
   )
 })
@@ -90,10 +91,12 @@ export const ShowThumbnail = memo(_ShowThumbnail, (prevProps, nextProps) => {
 function _ShowThumbnail({
   thumbnail,
   focusThumbnail,
+  index,
   isFocused = false,
 }: {
   thumbnail: Thumbnail
-  focusThumbnail: (t: Thumbnail) => void
+  focusThumbnail: (t: number) => void
+  index: number
   isFocused?: boolean
 }) {
   //   const { dataURI, name, config, videoMetadata } = thumbnail
@@ -102,46 +105,26 @@ function _ShowThumbnail({
   return (
     <article>
       <header>
-        <strong>At {formatDuration(config.captureTime)}</strong>
+        <strong>
+          #{thumbnail.index + 1} at {formatDuration(config.captureTime)}
+        </strong>
       </header>
       <img
         src={dataURI}
         alt={`At ${formatDuration(config.captureTime)}`}
         className={isFocused ? classes.imageFocused : classes.imageNotFocused}
-        onClick={() => focusThumbnail(thumbnail)}
-        onKeyDown={() => focusThumbnail(thumbnail)}
+        onClick={() => focusThumbnail(index)}
+        onKeyDown={() => focusThumbnail(index)}
       />
 
       <footer>
         <button
           type="button"
           onClick={() => downloadDataUri(blob, name, config.format)}
+          data-tooltip={formatBytes(blob.size)}
         >
-          Download ({formatBytes(blob.size)})
+          Download
         </button>
-        {/* <div className="grid">
-                        <p>
-                          {videoMetadata.width}x{videoMetadata.height}
-                          &nbsp;
-                          <small>{name}</small>
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            downloadDataUri(blob, name, config.format)
-                          }
-                        >
-                          Download ({formatBytes(blob.size)})
-                        </button>
-                      </div> */}
-        {/* <p>Config:</p>
-                      <ul>
-                        <li>Max Width: {config.maxWidth}</li>
-                        <li>Max Height: {config.maxHeight}</li>
-                        <li>Quality: {config.quality}</li>
-                        <li>Capture Time: {config.captureTime}</li>
-                        <li>Format: {config.format}</li>
-                      </ul> */}
       </footer>
     </article>
   )
