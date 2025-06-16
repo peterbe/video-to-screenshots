@@ -1,6 +1,6 @@
 # Video to Screenshots
 
-Demo app for how to create screenshots from a video file.
+A web app to turn a video file into screenshots without a server.
 
 ## Demo
 
