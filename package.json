@@ -11,8 +11,7 @@
     "preview": "vite preview",
     "prepare": "husky",
     "ssg": "bun run src/scripts/generate-static-pages.ts",
-    "#test": "bun run test:ssg && bun run test:playwright",
-    "test": "bun run test:ssg",
+    "test": "bun run test:ssg && bun run test:playwright",
     "test:ssg": "bun test ./src/tests/ssg.test.ts",
     "test:playwright": "playwright test",
     "playwright:codegen": "playwright codegen"
