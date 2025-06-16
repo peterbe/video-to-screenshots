@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: 'Oh gawd! This we'll have to figure out!'
+about: Oh gawd! This we'll have to figure out!
 title: ''
 labels: bug
 assignees: ''
