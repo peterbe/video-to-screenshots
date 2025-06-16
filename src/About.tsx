@@ -21,13 +21,19 @@ export function About() {
         </a>
         .
       </p>
-      <p>
-        Please send your feedback to{" "}
-        <a href="https://github.com/peterbe/video-to-screenshots/issues/new">
-          the GitHub repo
-        </a>
-        .
-      </p>
+      <p>Please send your feedback to:</p>
+      <ul>
+        <li>
+          <a href="https://github.com/peterbe/video-to-screenshots/issues/new?template=bug_report.md">
+            Bug report
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/peterbe/video-to-screenshots/issues/new?template=custom.md">
+            Any feedback
+          </a>
+        </li>
+      </ul>
       <hr style={{ marginTop: 150, marginBottom: 50 }} />
       <p style={{ textAlign: "center" }}>
         <Link to="/">Back to Home page</Link>
