@@ -2,6 +2,11 @@
 
 Demo app for how to create screenshots from a video file.
 
+## Demo
+
+https://github.com/user-attachments/assets/b4442dfa-c5f2-411f-85dc-97b8592e7926
+
+
 ## Contribute
 
 ```sh
