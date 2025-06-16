@@ -27,8 +27,9 @@ outdated:
     bunx npm-check-updates --interactive
 
 codegen:
-    curl -s http://localhost:3000
-    npm run playwright:codegen
+    curl -s http://localhost:4173
+    echo "You MIGHT need to run: bunx playwright install"
+    bun run playwright:codegen
 
 test:
     bun run test
