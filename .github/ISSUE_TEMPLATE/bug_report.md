@@ -2,9 +2,8 @@
 name: Bug report
 about: 'Oh gawd! This we'll have to figure out!'
 title: ''
-labels: 'bug'
+labels: bug
 assignees: ''
-
 ---
 
 **Describe the bug**
