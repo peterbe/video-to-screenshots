@@ -1,8 +1,8 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
+name: Any other form of feedback
+about: Constructive criticism is always welcome!
 title: ''
-labels: 'feedback'
+labels: feedback
 assignees: ''
 
 ---
