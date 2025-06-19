@@ -19,6 +19,10 @@ async function main() {
   const templateHtml = await Bun.file("dist/_index.html").text()
   if (!templateHtml) throw new Error("templateFile is empty")
   const $ = cheerio.load(templateHtml)
+  const rootCanonicalHref = $('link[rel="canonical"]').attr("href")
+  if (!rootCanonicalHref) throw new Error("Template is missing canonical link")
+  const rootCanonicalUrl = new URL(rootCanonicalHref)
+
   const links = $('link[rel="stylesheet"]').map((_, el) => {
     const $el = $(el)
     const href = $el.attr("href")
@@ -40,7 +44,8 @@ async function main() {
   }
 
   for (const [path, dest, title] of PAGES) {
-    await preRenderApp($, path, title)
+    const canonicalUrl = new URL(path, rootCanonicalUrl).toString()
+    await preRenderApp($, { path, title, canonicalUrl })
     await Bun.file(dest).write($.html())
     console.log(
       styleText("green", `Generated ${dest} for ${path} with title: ${title}`),
