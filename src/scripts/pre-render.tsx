@@ -15,8 +15,15 @@ const getAppRoutes = async () => {
 
 export const preRenderApp = async (
   $: CheerioAPI,
-  path: string,
-  title: string,
+  {
+    path,
+    title,
+    canonicalUrl,
+  }: {
+    path: string
+    title: string
+    canonicalUrl: string
+  },
 ) => {
   const AppRoutes = await getAppRoutes()
 
@@ -28,4 +35,5 @@ export const preRenderApp = async (
 
   $("#root").html(reactHtml)
   $("title").text(title)
+  $('link[rel="canonical"]').attr("href", canonicalUrl)
 }
