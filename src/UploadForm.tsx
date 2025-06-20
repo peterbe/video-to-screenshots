@@ -3,7 +3,10 @@ import { useRef, useState } from "react"
 export function UploadForm({
   onUpload,
   onReset,
-}: { onUpload: (file: File) => void; onReset: () => void }) {
+}: {
+  onUpload: (file: File) => void
+  onReset: () => void
+}) {
   const [hasFile, setHasFile] = useState(false)
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]

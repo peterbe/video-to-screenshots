@@ -1,7 +1,7 @@
 import { memo } from "react"
-import classes from "./ShowThumbnail.module.scss"
 import { formatBytes } from "./formatBytes"
 import { formatDuration } from "./formatDuration"
+import classes from "./ShowThumbnail.module.scss"
 import type { Thumbnail } from "./types"
 
 function getBlob(dataUri: string, mimeType?: string): Blob {
