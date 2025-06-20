@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,18 +7,17 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "node_modules/@hono/oidc-auth/dist/index.js",
-      "node_modules/@gw31415/hono-oidc-simple/dist/index.cjs"
+    "includes": [
+      "**",
+      "!**/node_modules/@hono/oidc-auth/dist/index.js",
+      "!**/node_modules/@gw31415/hono-oidc-simple/dist/index.cjs"
     ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
@@ -28,6 +27,21 @@
       },
       "correctness": {
         "noUnusedImports": "warn"
+      },
+      "nursery": {
+        "useUniqueElementIds": "off"
+      },
+      "style": {
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       }
     }
   },

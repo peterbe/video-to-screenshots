@@ -1,15 +1,15 @@
 import { useState } from "react"
-import { DisplayThumbnails } from "./DisplayThumbnails"
-import { UploadForm } from "./UploadForm"
-import { VideoError } from "./VideoError"
 import { useConfig } from "./configContext"
 import {
   createVideoThumbnail,
   getVideoMetadata,
 } from "./create-video-thumbnail"
+import { DisplayThumbnails } from "./DisplayThumbnails"
 import { formatBytes } from "./formatBytes"
 import { formatDuration } from "./formatDuration"
 import type { Thumbnail, VideoMetadata } from "./types"
+import { UploadForm } from "./UploadForm"
+import { VideoError } from "./VideoError"
 
 export function Home() {
   const { config } = useConfig()
@@ -35,7 +35,10 @@ export function Home() {
         const captureCallback = ({
           captureTime,
           index,
-        }: { captureTime: number; index: number }) => {
+        }: {
+          captureTime: number
+          index: number
+        }) => {
           const captureConfig = { ...config, captureTime }
           createVideoThumbnail(file, captureConfig)
             .then((dataURI) => {

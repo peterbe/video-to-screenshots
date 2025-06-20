@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router"
 import { About } from "./About"
+import { ConfigProvider, defaultConfig } from "./configContext"
 import { Home } from "./Home"
 import { Layout } from "./Layout"
-import { ConfigProvider, defaultConfig } from "./configContext"
 
 // Has to be a default export for the pre-render script to work
 export default function AppRoutes() {
