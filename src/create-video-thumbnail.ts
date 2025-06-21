@@ -12,13 +12,7 @@ export function createVideoThumbnail(
   videoFile: File,
   options: Options,
 ): Promise<string> {
-  const {
-    // maxWidth = 1000,
-    // maxHeight = 1000,
-    quality = 1.0,
-    captureTime = 0.1,
-    format = "image/jpeg",
-  } = options
+  const { quality = 1.0, captureTime = 0.1, format = "image/jpeg" } = options
   return new Promise((resolve, reject) => {
     const video = document.createElement("video")
     const canvas = document.createElement("canvas")
@@ -37,23 +31,10 @@ export function createVideoThumbnail(
     video.src = videoUrl
 
     video.onloadedmetadata = () => {
-      // let width = video.videoWidth
-      // let height = video.videoHeight
       const width = video.videoWidth
       const height = video.videoHeight
-
-      // if (width > maxWidth) {
-      //   height = Math.floor(height * (maxWidth / width))
-      //   width = maxWidth
-      // }
-
-      // if (height > maxHeight) {
-      //   width = Math.floor(width * (maxHeight / height))
-      //   height = maxHeight
-      // }
       canvas.width = width
       canvas.height = height
-
       video.currentTime = captureTime
     }
 
