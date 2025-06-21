@@ -21,6 +21,12 @@ export function About() {
         </a>
         .
       </p>
+      <p>
+        Blogged about this app on here:{" "}
+        <a href="https://www.peterbe.com/plog/video-to-screenshots-app">
+          "Video to screenshots app"
+        </a>
+      </p>
       <p>Please send your feedback to:</p>
       <ul>
         <li>
