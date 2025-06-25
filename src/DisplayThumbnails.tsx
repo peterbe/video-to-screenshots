@@ -58,8 +58,6 @@ export function DisplayThumbnails({ thumbnails }: { thumbnails: Thumbnail[] }) {
                   isFocused={false}
                   thumbnail={thumbnail}
                   focusThumbnail={(number) => {
-                    console.log({ CLICKED_ON: number })
-
                     setFocusThumbnailIndex(number)
                   }}
                 />
