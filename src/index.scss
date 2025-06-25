@@ -1,1 +1,20 @@
-@use "@picocss/pico";
+@use "@picocss/pico/scss/pico" with (
+  $modules: (
+    "content/code": false,
+    "forms/input-color": false,
+    "forms/input-date": false,
+    "forms/input-file": true,
+    "forms/input-range": false,
+    "forms/input-search": false,
+    "components/accordion": false,
+    "components/card": true,
+    "components/dropdown": false,
+    "components/loading": false,
+    "components/modal": false,
+    "components/nav": true,
+    "components/progress": false,
+    "components/tooltip": false,
+    "utilities/accessibility": false,
+    "utilities/reduce-motion": false,
+  )
+);
