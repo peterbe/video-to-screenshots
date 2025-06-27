@@ -21,3 +21,9 @@ jobs:
         env:
           VITE_TEST: 1
       - run: bun run test
+      - name: Start local dev
+        run: bun run dev > /tmp/stdout.log 2> /tmp/stderr.log &
+      - name: Test local dev
+        run: |
+          sleep 2
+          curl --retry-connrefused --retry 4 http://localhost:5173

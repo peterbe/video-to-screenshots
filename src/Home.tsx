@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { ChangeConfig } from "./ChangeConfig"
 import { useConfig } from "./configContext"
 import {
   createVideoThumbnail,
@@ -28,17 +29,8 @@ export function Home() {
       .then((metadata) => {
         setVideoMetadata(metadata)
 
-        const captureTimes = getCaptureTimes(metadata.duration)
-        const queue = captureTimes.map((captureTime, index) => {
-          return { captureTime, index }
-        })
-        const captureCallback = ({
-          captureTime,
-          index,
-        }: {
-          captureTime: number
-          index: number
-        }) => {
+        const queue = getCaptureQueue(metadata.duration)
+        const captureCallback = ({ captureTime, index }: CaptureQueueItem) => {
           const captureConfig = { ...config, captureTime }
           createVideoThumbnail(file, captureConfig)
             .then((dataURI) => {
@@ -94,12 +86,17 @@ export function Home() {
     <div>
       <UploadForm onUpload={uploadHandler} onReset={uploadResetHandler} />
       {error && <VideoError error={error} />}
-      {videoMetadata !== null && (
-        <p>
-          Video duration {formatDuration(videoMetadata.duration)}.{" "}
-          {file && <span>File size {formatBytes(file.size)}</span>}
-        </p>
+
+      {videoMetadata !== null && thumbnails.length > 0 && (
+        <div className="grid">
+          <p>
+            Video duration {formatDuration(videoMetadata.duration)}.{" "}
+            {file && <span>File size {formatBytes(file.size)}</span>}
+          </p>
+          <ChangeConfig />
+        </div>
       )}
+
       <DisplayThumbnails thumbnails={thumbnails} />
     </div>
   )
@@ -124,4 +121,16 @@ function getCaptureTimes(durationSeconds: number): number[] {
   }
 
   return captureTimes
+}
+
+type CaptureQueueItem = {
+  captureTime: number
+  index: number
+}
+
+function getCaptureQueue(durationSeconds: number): CaptureQueueItem[] {
+  const captureTimes = getCaptureTimes(durationSeconds)
+  return captureTimes.map((captureTime, index) => {
+    return { captureTime, index }
+  })
 }
