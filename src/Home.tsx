@@ -1,24 +1,26 @@
 import { useState } from "react"
-import { useConfig } from "./configContext"
+import { ChangeConfig } from "./ChangeConfig"
 import {
   createVideoThumbnail,
   getVideoMetadata,
+  type Options,
 } from "./create-video-thumbnail"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { formatBytes } from "./formatBytes"
-import { formatDuration } from "./formatDuration"
+import { formatDurationLong } from "./formatDuration"
 import type { Thumbnail, VideoMetadata } from "./types"
 import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
 
 export function Home() {
-  const { config } = useConfig()
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(null)
 
-  function uploadHandler(file: File) {
+  const [loading, setLoading] = useState(false)
+
+  function uploadHandler(file: File, config: Options) {
     setThumbnails([])
     setFile(file)
 
@@ -28,17 +30,8 @@ export function Home() {
       .then((metadata) => {
         setVideoMetadata(metadata)
 
-        const captureTimes = getCaptureTimes(metadata.duration)
-        const queue = captureTimes.map((captureTime, index) => {
-          return { captureTime, index }
-        })
-        const captureCallback = ({
-          captureTime,
-          index,
-        }: {
-          captureTime: number
-          index: number
-        }) => {
+        const queue = getCaptureQueue(metadata.duration)
+        const captureCallback = ({ captureTime, index }: CaptureQueueItem) => {
           const captureConfig = { ...config, captureTime }
           createVideoThumbnail(file, captureConfig)
             .then((dataURI) => {
@@ -67,15 +60,19 @@ export function Home() {
                 sleep(100).then(() => {
                   captureCallback(next)
                 })
+              } else {
+                setLoading(false)
               }
             })
             .catch((error) => {
               setError(error)
+              setLoading(false)
             })
         }
 
         const next = queue.shift()
         if (next !== undefined) {
+          setLoading(true)
           // Start the recursive capture process!
           captureCallback(next)
         }
@@ -94,12 +91,28 @@ export function Home() {
     <div>
       <UploadForm onUpload={uploadHandler} onReset={uploadResetHandler} />
       {error && <VideoError error={error} />}
-      {videoMetadata !== null && (
-        <p>
-          Video duration {formatDuration(videoMetadata.duration)}.{" "}
-          {file && <span>File size {formatBytes(file.size)}</span>}
-        </p>
+
+      {videoMetadata !== null && thumbnails.length > 0 && (
+        <div className="grid">
+          <p>
+            Video duration: {formatDurationLong(videoMetadata.duration)}
+            <br />
+            {file && <span>File size: {formatBytes(file.size)}</span>}
+            <br />
+            {loading && (
+              <span aria-busy="true">Generating thumbnails for you...</span>
+            )}
+          </p>
+          <ChangeConfig
+            onChange={(config: Options) => {
+              if (file) {
+                uploadHandler(file, config)
+              }
+            }}
+          />
+        </div>
       )}
+
       <DisplayThumbnails thumbnails={thumbnails} />
     </div>
   )
@@ -124,4 +137,16 @@ function getCaptureTimes(durationSeconds: number): number[] {
   }
 
   return captureTimes
+}
+
+type CaptureQueueItem = {
+  captureTime: number
+  index: number
+}
+
+function getCaptureQueue(durationSeconds: number): CaptureQueueItem[] {
+  const captureTimes = getCaptureTimes(durationSeconds)
+  return captureTimes.map((captureTime, index) => {
+    return { captureTime, index }
+  })
 }
