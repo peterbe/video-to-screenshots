@@ -1,25 +1,26 @@
 import { useState } from "react"
 import { ChangeConfig } from "./ChangeConfig"
-import { useConfig } from "./configContext"
 import {
   createVideoThumbnail,
   getVideoMetadata,
+  type Options,
 } from "./create-video-thumbnail"
 import { DisplayThumbnails } from "./DisplayThumbnails"
 import { formatBytes } from "./formatBytes"
-import { formatDuration } from "./formatDuration"
+import { formatDurationLong } from "./formatDuration"
 import type { Thumbnail, VideoMetadata } from "./types"
 import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
 
 export function Home() {
-  const { config } = useConfig()
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(null)
 
-  function uploadHandler(file: File) {
+  const [loading, setLoading] = useState(false)
+
+  function uploadHandler(file: File, config: Options) {
     setThumbnails([])
     setFile(file)
 
@@ -59,15 +60,19 @@ export function Home() {
                 sleep(100).then(() => {
                   captureCallback(next)
                 })
+              } else {
+                setLoading(false)
               }
             })
             .catch((error) => {
               setError(error)
+              setLoading(false)
             })
         }
 
         const next = queue.shift()
         if (next !== undefined) {
+          setLoading(true)
           // Start the recursive capture process!
           captureCallback(next)
         }
@@ -90,10 +95,21 @@ export function Home() {
       {videoMetadata !== null && thumbnails.length > 0 && (
         <div className="grid">
           <p>
-            Video duration {formatDuration(videoMetadata.duration)}.{" "}
-            {file && <span>File size {formatBytes(file.size)}</span>}
+            Video duration: {formatDurationLong(videoMetadata.duration)}
+            <br />
+            {file && <span>File size: {formatBytes(file.size)}</span>}
+            <br />
+            {loading && (
+              <span aria-busy="true">Generating thumbnails for you...</span>
+            )}
           </p>
-          <ChangeConfig />
+          <ChangeConfig
+            onChange={(config: Options) => {
+              if (file) {
+                uploadHandler(file, config)
+              }
+            }}
+          />
         </div>
       )}
 

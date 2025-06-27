@@ -1,10 +1,4 @@
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, type ReactNode, useContext, useState } from "react"
 import type { Options } from "./create-video-thumbnail"
 
 export const defaultConfig: Options = {
@@ -38,19 +32,6 @@ export const ConfigProvider: React.FC<ConfigProviderProps> = ({
   const setConfig = (newConfig: Partial<Options>): void => {
     setConfigState((prev) => ({ ...prev, ...newConfig }))
   }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: XXX
-  useEffect(() => {
-    const storedConfig = sessionStorage.getItem("videoThumbnailConfig")
-    if (storedConfig) {
-      // XXX make safer
-      setConfig(JSON.parse(storedConfig))
-    }
-  }, [])
-
-  useEffect(() => {
-    sessionStorage.setItem("videoThumbnailConfig", JSON.stringify(config))
-  }, [config])
 
   return (
     <ConfigContext.Provider value={{ config, setConfig }}>
