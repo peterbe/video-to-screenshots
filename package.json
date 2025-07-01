@@ -34,6 +34,6 @@
     "husky": "^9.1.7",
     "sass-embedded": "^1.89.2",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^7.0.0"
   }
 }
