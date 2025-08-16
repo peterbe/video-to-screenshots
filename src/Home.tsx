@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useLocalStorage } from "usehooks-ts"
 import { ChangeConfig } from "./ChangeConfig"
 import {
   createVideoThumbnail,
@@ -13,6 +14,7 @@ import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
 
 export function Home() {
+  const [uploadCount, countUploads] = useLocalStorage("upload-count", 0)
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<Error | null>(null)
@@ -80,7 +82,10 @@ export function Home() {
       .catch((error) => {
         setError(error)
       })
+
+    countUploads((prev) => prev + 1)
   }
+
   function uploadResetHandler() {
     setFile(null)
     setVideoMetadata(null)
@@ -114,7 +119,36 @@ export function Home() {
       )}
 
       <DisplayThumbnails thumbnails={thumbnails} />
+
+      <MadeBy uploadCount={uploadCount} />
     </div>
+  )
+}
+
+function MadeBy({ uploadCount }: { uploadCount: number }) {
+  if (!uploadCount) return null
+  const imageUrlBase = "https://www.peterbe.com/api/v1/logo.png"
+  const sp = new URLSearchParams({
+    ref: "video-to-screenshot",
+    uploadCount: String(uploadCount),
+  })
+  const imageUrl = `${imageUrlBase}?${sp.toString()}`
+  return (
+    <article
+      style={{
+        display: "inline-block",
+        textAlign: "center",
+        fontSize: "70%",
+      }}
+    >
+      <a href="https://www.peterbe.com?ref=video-to-screenshot">
+        <img src={imageUrl} width="70" alt="Made by peterbe" />
+      </a>
+      <p style={{ marginBottom: 5, marginTop: 5 }}>
+        Made by{" "}
+        <a href="https://www.peterbe.com?ref=video-to-screenshot">peterbe</a>
+      </p>
+    </article>
   )
 }
 

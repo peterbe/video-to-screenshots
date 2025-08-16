@@ -23,13 +23,16 @@ async function main() {
   if (!rootCanonicalHref) throw new Error("Template is missing canonical link")
   const rootCanonicalUrl = new URL(rootCanonicalHref)
 
-  const links = $('link[rel="stylesheet"]').map((_, el) => {
-    const $el = $(el)
-    const href = $el.attr("href")
-    if (href?.endsWith(".css") && href.startsWith("/")) {
-      return { $el, href }
-    }
-  })
+  const links = $('link[rel="stylesheet"]')
+    .map((_, el) => {
+      const $el = $(el)
+      const href = $el.attr("href")
+      if (href?.endsWith(".css") && href.startsWith("/")) {
+        return { $el, href }
+      }
+      return null
+    })
+    .filter((element) => Boolean(element))
   for (const { $el, href } of links) {
     const cssFile = Bun.file(`dist${href}`)
     if (await cssFile.exists()) {

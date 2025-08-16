@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -31,11 +31,10 @@
         "noArrayIndexKey": "off"
       },
       "correctness": {
-        "noUnusedImports": "warn"
-      },
-      "nursery": {
+        "noUnusedImports": "warn",
         "useUniqueElementIds": "off"
       },
+      "nursery": {},
       "style": {
         "noParameterAssign": "error",
         "useAsConstAssertion": "error",
