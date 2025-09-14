@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useLocalStorage } from "usehooks-ts"
+import { useSessionStorage } from "usehooks-ts"
 import { ChangeConfig } from "./ChangeConfig"
 import {
   createVideoThumbnail,
@@ -14,17 +14,17 @@ import { UploadForm } from "./UploadForm"
 import { VideoError } from "./VideoError"
 
 export function Home() {
-  const [uploadCount, countUploads] = useLocalStorage("upload-count", 0)
+  const [uploadCount, countUploads] = useSessionStorage("upload-count", 0)
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata | null>(null)
-
   const [loading, setLoading] = useState(false)
 
   function uploadHandler(file: File, config: Options) {
     setThumbnails([])
     setFile(file)
+    setLoading(true)
 
     // TODO THIS IS TOO LARGE. PLEASE REFACTOR
 
@@ -74,13 +74,13 @@ export function Home() {
 
         const next = queue.shift()
         if (next !== undefined) {
-          setLoading(true)
           // Start the recursive capture process!
           captureCallback(next)
         }
       })
       .catch((error) => {
         setError(error)
+        setLoading(false)
       })
 
     countUploads((prev) => prev + 1)
@@ -97,6 +97,12 @@ export function Home() {
       <UploadForm onUpload={uploadHandler} onReset={uploadResetHandler} />
       {error && <VideoError error={error} />}
 
+      <SafariWarning />
+
+      {loading && (
+        <span aria-busy="true">Generating thumbnails for you...</span>
+      )}
+
       {videoMetadata !== null && thumbnails.length > 0 && (
         <div className="grid">
           <p>
@@ -104,9 +110,6 @@ export function Home() {
             <br />
             {file && <span>File size: {formatBytes(file.size)}</span>}
             <br />
-            {loading && (
-              <span aria-busy="true">Generating thumbnails for you...</span>
-            )}
           </p>
           <ChangeConfig
             onChange={(config: Options) => {
@@ -183,4 +186,32 @@ function getCaptureQueue(durationSeconds: number): CaptureQueueItem[] {
   return captureTimes.map((captureTime, index) => {
     return { captureTime, index }
   })
+}
+
+function SafariWarning() {
+  const isSafari =
+    /^((?!chrome|android).)*safari/i.test(navigator.userAgent) &&
+    !/crios/i.test(navigator.userAgent)
+  if (!isSafari) return null
+  return (
+    <div
+      style={{
+        border: "2px solid red",
+        padding: 10,
+        marginTop: 10,
+        marginBottom: 10,
+      }}
+    >
+      <p>
+        Video to Screenshots currently doesn't work in Safari. Sorry about that.
+      </p>
+      <p>
+        If you have an idea please post it in{" "}
+        <a href="https://github.com/peterbe/video-to-screenshots/issues/13">
+          this GitHub issue
+        </a>
+        .
+      </p>
+    </div>
+  )
 }
