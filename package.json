@@ -22,7 +22,7 @@
     "cheerio": "^1.1.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router": "^7.9.4",
+    "react-router": "^7.9.5",
     "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
